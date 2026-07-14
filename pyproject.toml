@@ -1,0 +1,27 @@
+[project]
+name = "ableton-gpt"
+version = "0.1.0"
+description = "A Python package scaffold for AbletonGPT development."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "AbletonGPT Contributors" }
+]
+license = { text = "MIT" }
+classifiers = [
+  "Programming Language :: Python :: 3.11",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
+]
+keywords = ["ableton", "gpt", "music", "automation"]
+
+[project.urls]
+"Source" = "https://example.com/ableton-gpt"
+"Documentation" = "https://example.com/ableton-gpt/docs"
+
+[project.scripts]
+ableton-gpt = "ableton_gpt.cli:main"
+
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
