@@ -16,29 +16,48 @@ class AbletonSongAdapter(SongAdapter):
     def __init__(self, control_surface: Any) -> None:
         self._control_surface = control_surface
 
-    def play(self) -> None:
-        """Request playback from the current Ableton song object."""
-        logger.info("AbletonSongAdapter: entering play()")
+    def _get_song(self) -> Any:
         song = getattr(self._control_surface, "song", None)
+
         if song is None:
-            logger.info("AbletonSongAdapter: play requested (no song object available)")
-            return
+            raise RuntimeError("Ableton song object is unavailable")
+
+        return song
+
+    def play(self) -> None:
+        """Start Ableton playback."""
+        logger.info("AbletonSongAdapter: entering play()")
+
+        song = self._get_song()
+
         try:
-            logger.info("AbletonSongAdapter: before calling song.start_playing()")
-            logger.info("AbletonSongAdapter: after returning from song.start_playing()")
-        except Exception as exc:
-            logger.exception("AbletonSongAdapter: exception in play(): %s", exc)
+            song.start_playing()
+            logger.info("AbletonSongAdapter: playback started")
+        except Exception:
+            logger.exception("AbletonSongAdapter: play() failed")
             raise
-        logger.info("AbletonSongAdapter: leaving play()")
 
     def stop(self) -> None:
-        logger.info("AbletonSongAdapter: stop() called - not implemented")
-        raise NotImplementedError("stop() is not implemented")
+        """Stop Ableton playback."""
+        logger.info("AbletonSongAdapter: entering stop()")
+
+        song = self._get_song()
+
+        try:
+            song.stop_playing()
+            logger.info("AbletonSongAdapter: playback stopped")
+        except Exception:
+            logger.exception("AbletonSongAdapter: stop() failed")
+            raise
 
     def get_tempo(self) -> int:
-        logger.info("AbletonSongAdapter: get_tempo() called - not implemented")
-        raise NotImplementedError("get_tempo() is not implemented")
+        """Return current Ableton tempo."""
+        song = self._get_song()
+
+        return int(song.tempo)
 
     def set_tempo(self, bpm: int) -> None:
-        logger.info("AbletonSongAdapter: set_tempo(%d) called - not implemented", bpm)
-        raise NotImplementedError("set_tempo() is not implemented")
+        """Set Ableton tempo."""
+        song = self._get_song()
+
+        song.tempo = bpm
